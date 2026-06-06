@@ -16,12 +16,20 @@ leaked private identifier in a merged PR is effectively irreversible.
    Per Anthropic's authentication docs, the API accepts either a Console API key
    or a Workload-Identity-Federation bearer token; neither implies ZDR. By
    default, commercial API inputs are **not used for training**, but they are
-   retained for an abuse-monitoring window unless the organization has
-   **Zero-Data-Retention** enabled. ZDR is **not** a self-service toggle on the
-   free *Evaluation access* tier (buying credits does not enable it) — it is
-   requested through the Console's **Privacy controls** and granted under a
-   commercial agreement. Confirm ZDR is active before processing any real
-   private-project lesson. This gate cannot be verified from the key in code; it
+   **retained for a data-retention window** unless the organization has
+   **Zero-Data-Retention**.
+
+   Verify the current window in **Console → Organization settings → Privacy
+   controls → Data retention period**. A default organization shows a **30-day
+   retention period** with a **"Contact support"** action beside it — i.e. ZDR is
+   **not** a self-service toggle and buying API credits does not change it; a
+   lower/zero retention is requested from Anthropic support, typically under a
+   commercial agreement. While in this same panel, keep **"Allow user feedback"
+   OFF** and do **not** join the **Development Partner Program** (it shares Claude
+   Code sessions for model training and the shared data cannot be deleted).
+
+   Do not process any real private-project lesson until the retention window is
+   acceptable for your NDA. This gate cannot be verified from the key in code; it
    is contractual/operational.
 
    Until ZDR is active, run only the **synthetic smoke**
