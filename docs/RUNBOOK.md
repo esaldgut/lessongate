@@ -8,11 +8,25 @@ leaked private identifier in a merged PR is effectively irreversible.
 
 ## Pre-flight (before any non-dry run)
 
-1. **Anthropic API key is ZDR-enabled.** lessongate sends *redacted lesson text*
-   (not raw diffs) to the Claude API. The deny-list + structural redaction runs
-   **before** the request leaves the process, but the API is still a data
-   processor for that text. Confirm the org/key has Zero-Data-Retention. This is
-   a contractual/operational gate — it cannot be verified from the key in code.
+1. **Anthropic API key is ZDR-enabled. This is a hard precondition for real data.**
+   lessongate sends *redacted lesson text* (not raw diffs) to the Claude API. The
+   deny-list + structural redaction runs **before** the request leaves the
+   process, but the API is still a data processor for that text.
+
+   Per Anthropic's authentication docs, the API accepts either a Console API key
+   or a Workload-Identity-Federation bearer token; neither implies ZDR. By
+   default, commercial API inputs are **not used for training**, but they are
+   retained for an abuse-monitoring window unless the organization has
+   **Zero-Data-Retention** enabled. ZDR is **not** a self-service toggle on the
+   free *Evaluation access* tier (buying credits does not enable it) — it is
+   requested through the Console's **Privacy controls** and granted under a
+   commercial agreement. Confirm ZDR is active before processing any real
+   private-project lesson. This gate cannot be verified from the key in code; it
+   is contractual/operational.
+
+   Until ZDR is active, run only the **synthetic smoke**
+   (`--once --lessons-file testdata/smoke/synthetic_lessons.md`): real API calls,
+   real draft PR, but lesson text that contains no private project data.
 2. **GitHub token is least-privilege.** A fine-grained PAT scoped to exactly two
    repos: `read` on the private watch target, `pull-request: write` on the public
    repo. No admin, no other repos. Stored in the Keychain / a secrets manager,

@@ -124,7 +124,25 @@ degrades to a silent no-op that would skip the gate.
 
 ## Status
 
-v0.1 — the full pipeline is wired and tested offline (68 tests across 13
-packages). The remaining step is the first real draft PR against a live repo,
-which needs a ZDR API key and a scoped GitHub token. Non-goals for v0.1: MCP,
-OpenTelemetry, auto-merge, and watching anything but the iOS vertical slice.
+v0.1 — the full pipeline is wired and tested offline (73 tests across 13
+packages, deterministic CI). The agent is complete; what gates the first
+production run is a **deliberate precondition, not missing work**.
+
+Processing real lessons from a private project means sending redacted lesson text
+to a third-party API. The threat model requires **Zero-Data-Retention** on the
+Anthropic organization before that happens. ZDR is not a free-tier toggle — it is
+granted under a commercial agreement (see [`docs/RUNBOOK.md`](docs/RUNBOOK.md)).
+So lessongate **waits for ZDR** rather than processing private data without it.
+The agent enforces its own threat model; it doesn't get bypassed because the
+author owns the data.
+
+Until then the **synthetic smoke** path exercises the entire pipeline — real
+Claude API calls, a real draft PR — on lesson text that carries no private
+project data:
+
+```bash
+./bin/lessongate dry-run --once --lessons-file testdata/smoke/synthetic_lessons.md
+```
+
+Non-goals for v0.1: MCP, OpenTelemetry, auto-merge, and watching anything but the
+single private vertical slice.
