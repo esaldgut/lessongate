@@ -1,0 +1,44 @@
+# --- NDA-critical: unsanitized content must never be committable ---
+# The quarantine holds raw lesson text / candidate skills that have NOT yet
+# passed the gate. .gitignore is defense-in-depth only (git add -f bypasses it);
+# the real controls are: encrypted-at-rest spool, dir outside synced paths,
+# chmod 700, TTL shred, and a gitleaks pre-commit hook. See the threat model.
+quarantine/
+*.quarantine
+**/quarantine/
+
+# Local agent state (ledger + cursor). Never published.
+state/
+*.ledger
+ledger.db
+ledger.jsonl
+*.lock
+
+# Secrets / config that could carry tokens
+.env
+.env.*
+*.pem
+*.key
+config.local.*
+
+# --- Go ---
+# Binaries — anchor to repo root so this does NOT match cmd/lessongate/ (source).
+/bin/
+/lessongate
+*.exe
+*.test
+*.out
+
+# Go build/test artifacts
+*.prof
+coverage.txt
+coverage.html
+
+# --- Editor / OS leak vectors (swapfiles can hold NDA content) ---
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+.DS_Store
+*.bak
