@@ -13,19 +13,19 @@ deterministically offline in CI.
 
 ```
             private repo (merged PRs + a curated lesson registry)
-                                   │
-   ┌────────────────────────────────┼─────────────────────────────────────┐
-   │ lessongate (single-process Go binary, single-run flock)               │
-   │                                                                        │
-   │  WATCH ─▶ PREFILTER ─▶ REDACT ─▶ EXTRACT ─▶ GATE ─▶ RECONCILE ─▶ EMIT  │
+                                    │
+   ┌────────────────────────────────┼────────────────────────────────────────┐
+   │ lessongate (single-process Go binary, single-run flock)                 │
+   │                                                                         │
+   │  WATCH ─▶ PREFILTER ─▶ REDACT ─▶ EXTRACT ─▶ GATE ─▶ RECONCILE ─▶ EMIT   │
    │  go-github  (no API)   (det.,    (Claude:   (det.   (novel/     (draft  │
    │  mergedAt              before    is it      regex + overlaps/   PR,     │
    │  cursor               any API)   general-   corpus  duplicate)  idempo- │
-   │                                  izable?)   + canary           tent)   │
-   │                                  + Claude                              │
-   │                                  verify                                │
-   │  ledger (JSONL, atomic, fail-closed) · slog (redacted) · core dumps off│
-   └────────────────────────────────────────────────────────────────────┬──┘
+   │                                  izable?)   + canary           tent)    │
+   │                                  + Claude                               │
+   │                                  verify                                 │
+   │  ledger (JSONL, atomic, fail-closed) · slog (redacted) · core dumps off │
+   └──────────────────────────────────────────────────────────────────────┬──┘
                                                                           │
                                             DRAFT PR (fingerprinted) ─────┘
                                                       │
