@@ -91,6 +91,7 @@ leak-response procedure.
 ```
 cmd/lessongate/        CLI: run / backfill / dry-run / status
 internal/
+  config/              defaults, DisableCoreDumps, state/quarantine dirs, model
   watch/               go-github merged-PR cursor (mergedAt, not PR number)
   prefilter/           drop docs-only / dep-bump / own capture commits, no API
   lessons/             parse the curated lesson registry (1:N, fenced-code safe)
@@ -109,7 +110,7 @@ internal/
 ## Running it
 
 ```bash
-go build ./... && go test ./...          # 68 tests, all offline
+go build ./... && go test ./...          # 73 tests pass offline (+2 opt-in, see below)
 
 export ANTHROPIC_API_KEY=...             # must be a ZDR-enabled key
 export LESSONGATE_GITHUB_TOKEN=...        # fine-grained PAT, 2 repos
@@ -124,9 +125,11 @@ degrades to a silent no-op that would skip the gate.
 
 ## Status
 
-v0.1 — the full pipeline is wired and tested offline (73 tests across 13
-packages, deterministic CI). The agent is complete; what gates the first
-production run is a **deliberate precondition, not missing work**.
+v0.1 — the full pipeline is wired and tested offline (75 tests across 13 test
+packages, deterministic CI: 73 run offline, 2 are opt-in against the real
+skill-creator plugin / lesson registry via env flags). The agent is complete;
+what gates the first production run is a **deliberate precondition, not missing
+work**.
 
 Processing real lessons from a private project means sending redacted lesson text
 to a third-party API. The threat model requires **Zero-Data-Retention** on the
